@@ -1,0 +1,5 @@
+TMSliderControl is a (almost perfect) replica of the On/Off switch in the Time Machine system preferences pane of OS X.
+
+This control is used in Jet Lag
+
+Note: This class requires Mac OS X 10.5 (Leopard) due to its use of CoreAnimation.
