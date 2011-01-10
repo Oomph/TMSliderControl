@@ -203,10 +203,10 @@
     return state;
 }
 
-- (void)setState:(BOOL)newState
+- (void)setState:(NSInteger)newState
 {
-    state = newState;
-    if (state == NSOffState)
+    [super setState:newState];
+    if ([self state] == NSOffState)
     {
         handleControlRect = handleControlRectOff;
     }
@@ -214,10 +214,20 @@
     {
         handleControlRect = handleControlRectOn;
     }
-    [NSAnimationContext beginGrouping];
-	[[NSAnimationContext currentContext] setDuration: 0.15];
-    [[sliderHandleView animator] setFrameOrigin: handleControlRect.origin];
-    [NSAnimationContext endGrouping];
+    
+    if ([sliderHandleView window])
+    {
+        // It's in a window, we can use CoreAnimation
+        [NSAnimationContext beginGrouping];
+        [[NSAnimationContext currentContext] setDuration: 0.15];
+        [[sliderHandleView animator] setFrameOrigin: handleControlRect.origin];
+        [NSAnimationContext endGrouping];
+    }
+    else {
+        // It's not in a window, just set it.
+        [sliderHandleView setFrameOrigin:handleControlRect.origin];
+    }
+    
     [self sendAction:[self action] to:[self target]];
     [self setNeedsDisplay: YES];
 }
