@@ -7,104 +7,98 @@
 //
 
 #import "TMSliderControl.h"
-
-/*
- * Basic NSImageView subclass for handle
- */
-
-@interface TMSliderControlHandle : NSImageView {
-}
-@end
-@implementation TMSliderControlHandle
-- (void)mouseDown:(NSEvent *)theEvent   {    [[self superview] mouseDown:theEvent];     }
-- (void)mouseDragged:(NSEvent*)theEvent {    [[self superview] mouseDragged:theEvent];  }
-- (void)mouseUp:(NSEvent*)theEvent      {    [[self superview] mouseUp:theEvent];       }
-@end
-
-/*
- * Private control methods
- */
-
-@interface TMSliderControl (Private)
-- (void)drawBacking;
-- (void)drawOverlay;
-- (void)drawHandle;
-@end
-
-@implementation TMSliderControl (Private)
-
-- (void)drawBacking
-{
-    [sliderWell drawInRect:[self bounds] fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
-}
-
-- (void)drawOverlay
-{
-    [overlayMask drawInRect:[self bounds] fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
-}
-
-- (void)drawHandle
-{
-    NSImage *sliderImage;
-    if (controlState == kTMSliderControlState_Active)
-    {
-        sliderImage = sliderHandleDown;
-    }
-    else
-    {
-        sliderImage = sliderHandle;
-    }
-    [sliderHandleView setImage: sliderImage];
-}
-
-- (void)layoutHandle
-{
-    handleControlRectOff = NSMakeRect(-2,1, 44, 27);
-    handleControlRectOn = NSMakeRect([self bounds].size.width - 42,1, 44, 27);
-    handleControlRect = handleControlRectOff;
-}
-
-@end
+#import <QuartzCore/QuartzCore.h>
 
 @implementation TMSliderControl
+@synthesize state, enabled;
+@synthesize sliderHandleImage, sliderHandleDownImage;
+@synthesize sliderWell, sliderHandle, overlayMask;
+@synthesize target, action;
+
++ (void)initialize
+{
+    if (self != [TMSliderControl class])
+		return;
+    
+    [NSObject exposeBinding:@"state"];
+    [NSObject exposeBinding:@"enabled"];
+}
+
++ (NSImage*)sliderHandleImage
+{
+    return [NSImage imageNamed:@"SliderHandle"];
+}
+
++ (NSImage*)sliderHandleDownImage
+{
+    return [NSImage imageNamed:@"SliderHandleDown"];
+}
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code here.
-        sliderWell = [[NSImage imageNamed:@"SliderWell"] retain];
-        overlayMask = [[NSImage imageNamed:@"OverlayMask"] retain];
-        sliderHandle = [[NSImage imageNamed:@"SliderHandle"] retain];
-        sliderHandleDown = [[NSImage imageNamed:@"SliderHandleDown"] retain];
         [self layoutHandle];
-        sliderHandleView = [[TMSliderControlHandle alloc] initWithFrame: handleControlRectOff];
-        [sliderHandleView setWantsLayer: YES];
-        [self addSubview: sliderHandleView];
-        state = NO;
-        //[self setWantsLayer:YES];
+
+		self.state = kTMSliderControlState_Inactive;
+        self.enabled = YES;
+        
+        self.sliderHandleImage = [[self class] sliderHandleImage];
+        self.sliderHandleDownImage = [[self class] sliderHandleImage];
+        
+        [self setLayer:[CALayer layer]];
+        [self setWantsLayer:YES];
+        
+        self.sliderWell = [CALayer layer];
+        sliderWell.frame = NSRectToCGRect(self.bounds);
+        sliderWell.contents = [NSImage imageNamed:@"SliderWell"];
+        [self.layer addSublayer:sliderWell];
+        
+        self.sliderHandle = [CALayer layer];
+        sliderHandle.frame = handleControlRectOff;
+        sliderHandle.contents = sliderHandleImage;
+        [sliderWell addSublayer:sliderHandle];
+
+        self.overlayMask = [CALayer layer];
+        overlayMask.frame = NSRectToCGRect(self.bounds);
+        overlayMask.contents = [NSImage imageNamed:@"OverlayMask"];
+        [self.layer addSublayer:overlayMask];
+        
+        [self addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:&self];
+        [self addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:&self];
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [self removeObserver:self forKeyPath:@"state"];
+    [self removeObserver:self forKeyPath:@"enabled"];
+    
     [sliderWell release];
     [overlayMask release];
     [sliderHandle release];
-    [sliderHandleDown release];
-    [sliderHandleView release];
+    [sliderHandleImage release];
+    [sliderHandleDownImage release];
+
     [super dealloc];
 }
 
-- (void)awakeFromNib
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    [self setWantsLayer:YES];
-}
-
-- (void)drawRect:(NSRect)rect {
-    [self drawBacking];
-    [self drawHandle];
-    [self drawOverlay];
+    if([keyPath isEqualToString:@"state"])
+    {
+        CGFloat newXPosition = (self.state == kTMSliderControlState_Active ? CGRectGetMidX(handleControlRectOn) : CGRectGetMidX(handleControlRectOff));
+        
+        CGPoint sliderPosition = sliderHandle.position;
+        sliderPosition.x = newXPosition;
+        
+        sliderHandle.position = sliderPosition;
+    }
+    else if([keyPath isEqualToString:@"enabled"])
+    {
+        self.layer.opacity = (self.enabled ? 1.0 : 0.25);
+    }
 }
 
 - (BOOL)acceptsFirstResponder
@@ -114,15 +108,20 @@
 
 - (void)mouseDown:(NSEvent*)theEvent
 {
-	NSPoint mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	hasDragged = NO;
-	// down on the position control rect
-	if(NSPointInRect(mousePoint,handleControlRect))
-	{
-		controlState = kTMSliderControlState_Active;
-        mouseDownPosition = NSMakePoint(mousePoint.x - handleControlRect.origin.x, 0);
-        [self setNeedsDisplay:YES];
-	}
+	if(self.enabled)
+    {
+        CGPoint mousePoint = NSPointToCGPoint([self convertPoint:[theEvent locationInWindow] fromView:nil]);
+        hasDragged = NO;
+        // down on the position control rect
+        if(CGRectContainsPoint(sliderHandle.frame, mousePoint))
+        {
+            mouseDownPosition = CGPointMake(mousePoint.x - sliderHandle.position.x, 0);
+            [CATransaction begin];
+            [CATransaction setDisableActions:YES];
+            sliderHandle.contents = sliderHandleDownImage;
+            [CATransaction commit];
+        }
+    }
 }
 
 
@@ -131,124 +130,64 @@
 	NSPoint mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	hasDragged = YES;
     
-	// dragging the position control rect
-	if(controlState == kTMSliderControlState_Active)
-	{
 		// center the rect around the mouse point
         
 		float newXPosition = mousePoint.x - mouseDownPosition.x;
         
         // clamp the position .
-        if (newXPosition < handleControlRectOff.origin.x)
-            newXPosition = handleControlRectOff.origin.x;
-        if (newXPosition > handleControlRectOn.origin.x)
-            newXPosition = handleControlRectOn.origin.x;
+        if (newXPosition < CGRectGetMidX(handleControlRectOff))
+            newXPosition = CGRectGetMidX(handleControlRectOff);
+        if (newXPosition > CGRectGetMidX(handleControlRectOn))
+            newXPosition = CGRectGetMidX(handleControlRectOn);
         
-        handleControlRect.origin.x = newXPosition;
-        [sliderHandleView setFrame: handleControlRect];
-        [self setNeedsDisplay:YES];
-	}
+        CGPoint sliderPosition = sliderHandle.position;
+        sliderPosition.x = newXPosition;
+        
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        sliderHandle.position = sliderPosition;
+        [CATransaction commit];
 }
 
 
 - (void)mouseUp:(NSEvent*)theEvent
 {
-    float minimumMovement = 10.0;
-    if(controlState != kTMSliderControlState_Inactive)
-	{
-		// switch the state to inactive and redraw
-		controlState = kTMSliderControlState_Inactive;
-        if (!hasDragged)
+    if(self.enabled)
+    {
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        sliderHandle.contents = sliderHandleImage;
+        [CATransaction commit];
+        
+        float minimumMovement = 10.0;
+        if(hasDragged && state != kTMSliderControlState_Inactive)
         {
-            // if they never dragged, but clicked/released in place on the handle, flip it over.
-            [self setState:![self state]];
-        }
-        else if (state == NSOffState)
-        {
-            if (handleControlRect.origin.x > minimumMovement)
+            if (sliderHandle.frame.origin.x < [self bounds].size.width - sliderHandle.frame.size.width - minimumMovement)
             {
                 // moved it enough to set it
-                [self setState: NSOnState];
+                self.state = kTMSliderControlState_Inactive;
             }
             else
             {
                 // put it back where it was.
-                [self setState: NSOffState];
+                self.state = kTMSliderControlState_Active;
             }
         }
         else
         {
-            if (handleControlRect.origin.x < [self bounds].size.width - handleControlRect.size.width - minimumMovement)
-            {
-                // moved it enough to set it
-                [self setState: NSOffState];
-            }
-            else
-            {
-                // put it back where it was.
-                [self setState: NSOnState];
-            }
+            self.state = !self.state;
         }
-
-	}
-    else
-    {
-        [self setState:![self state]];
+        
+        if(target && [target respondsToSelector:action])
+            [target performSelector:action withObject:self];
+        hasDragged = NO;
     }
 }
 
-
-- (BOOL)state
+- (void)layoutHandle
 {
-    return state;
+    handleControlRectOff = CGRectMake(-2,1, 44, 27);
+    handleControlRectOn = CGRectMake([self bounds].size.width - handleControlRectOff.size.width + 2,1, 44, 27);
 }
-
-- (void)setState:(NSInteger)newState
-{
-    [super setState:newState];
-    if ([self state] == NSOffState)
-    {
-        handleControlRect = handleControlRectOff;
-    }
-    else
-    {
-        handleControlRect = handleControlRectOn;
-    }
-    
-    if ([sliderHandleView window])
-    {
-        // It's in a window, we can use CoreAnimation
-        [NSAnimationContext beginGrouping];
-        [[NSAnimationContext currentContext] setDuration: 0.15];
-        [[sliderHandleView animator] setFrameOrigin: handleControlRect.origin];
-        [NSAnimationContext endGrouping];
-    }
-    else {
-        // It's not in a window, just set it.
-        [sliderHandleView setFrameOrigin:handleControlRect.origin];
-    }
-    
-    [self sendAction:[self action] to:[self target]];
-    [self setNeedsDisplay: YES];
-}
-
-
-- (void)setTarget:(id)anObject
-{
-    target = anObject;
-}
-- (id)target
-{
-    return target;
-}
-- (void)setAction:(SEL)aSelector
-{
-    action = aSelector;
-}
-- (SEL)action
-{
-    return action;
-}
-
 
 @end

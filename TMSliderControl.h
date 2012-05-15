@@ -18,23 +18,22 @@ typedef enum
 @class TMSliderControlHandle;
 
 @interface TMSliderControl : NSControl {
-    NSImage *sliderWell;
-    NSImage *overlayMask;
-    NSImage *sliderHandle;
-    NSImage *sliderHandleDown;
-    TMSliderControlHandle *sliderHandleView;
+    CALayer *sliderWell;
+    CALayer *overlayMask;
+    NSImage *sliderHandleImage;
+    NSImage *sliderHandleDownImage;
+    CALayer *sliderHandle;
     
     // drawing 
-	NSRect handleControlRect;
-    NSRect handleControlRectOn;
-    NSRect handleControlRectOff;
-    NSPoint mouseDownPosition;
+    CGRect handleControlRectOn;
+    CGRect handleControlRectOff;
+    CGPoint mouseDownPosition;
     
     // state
-    TMSliderControlState controlState;
     BOOL hasDragged;
-    BOOL state;
-
+    NSInteger state;
+    BOOL enabled;
+    
     id target;
     SEL action;
 }
@@ -44,13 +43,18 @@ typedef enum
 - (void)mouseDragged:(NSEvent*)theEvent;
 - (void)mouseUp:(NSEvent*)theEvent;
 
-- (BOOL)state;
-- (void)setState:(BOOL)newState;
+- (void)layoutHandle;
 
-- (void)setTarget:(id)anObject;
-- (id)target;
-- (void)setAction:(SEL)aSelector;
-- (SEL)action;
+@property (nonatomic, retain) CALayer *sliderWell;
+@property (nonatomic, retain) CALayer *overlayMask;
+@property (nonatomic, retain) NSImage *sliderHandleImage;
+@property (nonatomic, retain) NSImage *sliderHandleDownImage;
+@property (nonatomic, retain) CALayer *sliderHandle;
+
+@property (nonatomic, assign) BOOL enabled;
+@property (nonatomic, assign) NSInteger state;
+@property (nonatomic, assign) id target;
+@property (nonatomic, assign) SEL action;
 
 @end
 
