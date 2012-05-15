@@ -24,6 +24,16 @@
     [NSObject exposeBinding:@"enabled"];
 }
 
++ (NSImage*)sliderWellOn
+{
+    return [NSImage imageNamed:@"SliderWell"];
+}
+
++ (NSImage*)sliderWellOff
+{
+    return [NSImage imageNamed:@"SliderWell"];
+}
+
 + (NSImage*)sliderHandleImage
 {
     return [NSImage imageNamed:@"SliderHandle"];
@@ -40,8 +50,7 @@
 }
 
 - (id)initWithFrame:(NSRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
+    if ((self = [super initWithFrame:frame])) {
         // Initialization code here.
         [self layoutHandle];
 
@@ -56,7 +65,7 @@
         
         self.sliderWell = [CALayer layer];
         sliderWell.frame = NSRectToCGRect(self.bounds);
-        sliderWell.contents = [NSImage imageNamed:@"SliderWell"];
+        sliderWell.contents = [[self class] sliderWellOff];
         [self.layer addSublayer:sliderWell];
         
         self.sliderHandle = [CALayer layer];
@@ -104,6 +113,11 @@
     {
         self.layer.opacity = (self.enabled ? 1.0 : 0.25);
     }
+}
+
+- (CGFloat)minimumMovement
+{
+    return 10.0f;
 }
 
 - (BOOL)acceptsFirstResponder
@@ -164,7 +178,7 @@
         sliderHandle.contents = sliderHandleImage;
         [CATransaction commit];
         
-        float minimumMovement = 10.0;
+        float minimumMovement = [self minimumMovement];
         if(hasDragged && state != kTMSliderControlState_Inactive)
         {
             if (sliderHandle.frame.origin.x < [self bounds].size.width - sliderHandle.frame.size.width - minimumMovement)

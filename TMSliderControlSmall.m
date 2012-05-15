@@ -10,6 +10,16 @@
 
 @implementation TMSliderControlSmall
 
++ (NSImage*)sliderWellOn
+{
+    return [NSImage imageNamed:@"SmallSliderWellOn"];
+}
+
++ (NSImage*)sliderWellOff
+{
+    return [NSImage imageNamed:@"SmallSliderWellOff"];
+}
+
 + (NSImage*)sliderHandleImage
 {
     return [NSImage imageNamed:@"SmallSliderHandle"];
@@ -29,7 +39,7 @@
 {
     if([keyPath isEqualToString:@"state"])
     {
-        sliderWell.contents = (self.state == kTMSliderControlState_Active ? [NSImage imageNamed:@"SmallSliderWellOn"] : [NSImage imageNamed:@"SmallSliderWellOff"]);
+        sliderWell.contents = (self.state == kTMSliderControlState_Active ? [[self class] sliderWellOn] : [[self class] sliderWellOff]);
     }
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
