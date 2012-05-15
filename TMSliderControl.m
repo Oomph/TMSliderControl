@@ -44,7 +44,7 @@
         self.enabled = YES;
         
         self.sliderHandleImage = [[self class] sliderHandleImage];
-        self.sliderHandleDownImage = [[self class] sliderHandleImage];
+        self.sliderHandleDownImage = [[self class] sliderHandleDownImage];
         
         [self setLayer:[CALayer layer]];
         [self setWantsLayer:YES];
