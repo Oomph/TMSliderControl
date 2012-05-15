@@ -34,6 +34,11 @@
     return [NSImage imageNamed:@"SliderHandleDown"];
 }
 
++ (NSImage*)overlayMask
+{
+    return [NSImage imageNamed:@"OverlayMask"];
+}
+
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -61,7 +66,7 @@
 
         self.overlayMask = [CALayer layer];
         overlayMask.frame = NSRectToCGRect(self.bounds);
-        overlayMask.contents = [NSImage imageNamed:@"OverlayMask"];
+        overlayMask.contents = [[self class] overlayMask];
         [self.layer addSublayer:overlayMask];
         
         [self addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:&self];
