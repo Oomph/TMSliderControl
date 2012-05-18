@@ -31,12 +31,20 @@ typedef enum
     
     // state
     BOOL hasDragged;
-    NSInteger state;
+    BOOL state;
     BOOL enabled;
     
     id target;
     SEL action;
+    
+    id observedObjectForState;
+    NSString *observedKeyPathForState;
+
+    id observedObjectForEnabled;
+    NSString *observedKeyPathForEnabled;
 }
+
+- (void)updateUI;
 
 // events
 - (void)mouseDown:(NSEvent*)theEvent;
@@ -52,9 +60,15 @@ typedef enum
 @property (nonatomic, retain) CALayer *sliderHandle;
 
 @property (nonatomic, assign) BOOL enabled;
-@property (nonatomic, assign) NSInteger state;
+@property (nonatomic, assign) BOOL state;
 @property (nonatomic, assign) id target;
 @property (nonatomic, assign) SEL action;
+
+@property (nonatomic, retain) id observedObjectForState;
+@property (nonatomic, copy) NSString *observedKeyPathForState;
+
+@property (nonatomic, retain) id observedObjectForEnabled;
+@property (nonatomic, copy) NSString *observedKeyPathForEnabled;
 
 @end
 

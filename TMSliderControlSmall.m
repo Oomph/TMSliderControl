@@ -35,13 +35,12 @@
     return nil;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)updateUI
 {
-    if([keyPath isEqualToString:@"state"])
-    {
-        sliderWell.contents = (self.state == kTMSliderControlState_Active ? [[self class] sliderWellOn] : [[self class] sliderWellOff]);
-    }
-    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    [super updateUI];
+
+    sliderWell.contents = (self.state == kTMSliderControlState_Active ? [[self class] sliderWellOn] : [[self class] sliderWellOff]);
+
 }
 
 - (void)dealloc

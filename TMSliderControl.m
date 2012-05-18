@@ -9,19 +9,35 @@
 #import "TMSliderControl.h"
 #import <QuartzCore/QuartzCore.h>
 
+static void *StateObservationContext = (void *)2091;
+static void *EnabledObservationContext = (void *)2092;
+
 @implementation TMSliderControl
 @synthesize state, enabled;
 @synthesize sliderHandleImage, sliderHandleDownImage;
 @synthesize sliderWell, sliderHandle, overlayMask;
 @synthesize target, action;
 
+//bindings support
+@synthesize observedObjectForState;
+@synthesize observedKeyPathForState;
+@synthesize observedObjectForEnabled;
+@synthesize observedKeyPathForEnabled;
+
+
 + (void)initialize
 {
     if (self != [TMSliderControl class])
-		return;
+        return;
     
     [NSObject exposeBinding:@"state"];
     [NSObject exposeBinding:@"enabled"];
+}
+
+- (Class)valueClassForBinding:(NSString *)binding
+{
+    // both require numbers
+    return [NSNumber class];    
 }
 
 + (NSImage*)sliderWellOn
@@ -77,18 +93,15 @@
         overlayMask.frame = NSRectToCGRect(self.bounds);
         overlayMask.contents = [[self class] overlayMask];
         [self.layer addSublayer:overlayMask];
-        
-        [self addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:&self];
-        [self addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:&self];
     }
     return self;
 }
 
 - (void)dealloc
-{
-    [self removeObserver:self forKeyPath:@"state"];
-    [self removeObserver:self forKeyPath:@"enabled"];
-    
+{    
+    [self unbind:@"state"];
+    [self unbind:@"enabled"];
+
     [sliderWell release];
     [overlayMask release];
     [sliderHandle release];
@@ -98,21 +111,32 @@
     [super dealloc];
 }
 
+- (void)updateUI
+{
+    CGFloat newXPosition = (self.state == kTMSliderControlState_Active ? CGRectGetMidX(handleControlRectOn) : CGRectGetMidX(handleControlRectOff));
+    
+    CGPoint sliderPosition = sliderHandle.position;
+    sliderPosition.x = newXPosition;
+    
+    sliderHandle.position = sliderPosition;
+    self.layer.opacity = (self.enabled ? 1.0 : 0.25);
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if([keyPath isEqualToString:@"state"])
+    if(context == StateObservationContext)
     {
-        CGFloat newXPosition = (self.state == kTMSliderControlState_Active ? CGRectGetMidX(handleControlRectOn) : CGRectGetMidX(handleControlRectOff));
-        
-        CGPoint sliderPosition = sliderHandle.position;
-        sliderPosition.x = newXPosition;
-        
-        sliderHandle.position = sliderPosition;
+        NSNumber *value = [observedObjectForState valueForKey:observedKeyPathForState];
+        if(value)
+            [self setValue:value forKey:@"state"];
     }
-    else if([keyPath isEqualToString:@"enabled"])
+    if(context == EnabledObservationContext)
     {
-        self.layer.opacity = (self.enabled ? 1.0 : 0.25);
+        NSNumber *value = [observedObjectForEnabled valueForKey:observedKeyPathForEnabled];
+        if(value)
+            [self setValue:value forKey:@"enabled"];
     }
+    [self updateUI];
 }
 
 - (CGFloat)minimumMovement
@@ -185,18 +209,34 @@
             {
                 // moved it enough to set it
                 self.state = kTMSliderControlState_Inactive;
-            }
+                if (observedObjectForState)
+                {
+                    [observedObjectForState setValue: [NSNumber numberWithBool:state]
+                                          forKeyPath: observedKeyPathForState];
+                }
+           }
             else
             {
                 // put it back where it was.
                 self.state = kTMSliderControlState_Active;
+                if (observedObjectForState)
+                {
+                    [observedObjectForState setValue: [NSNumber numberWithBool:state]
+                                          forKeyPath: observedKeyPathForState];
+                }
             }
         }
         else
         {
             self.state = !self.state;
+            if (observedObjectForState)
+            {
+                [observedObjectForState setValue: [NSNumber numberWithBool:state]
+                                      forKeyPath: observedKeyPathForState];
+            }
         }
-        
+        [self updateUI];
+
         if(target && [target respondsToSelector:action])
             [target performSelector:action withObject:self];
         hasDragged = NO;
@@ -207,6 +247,49 @@
 {
     handleControlRectOff = CGRectMake(-2,1, 44, 27);
     handleControlRectOn = CGRectMake([self bounds].size.width - handleControlRectOff.size.width + 2,1, 44, 27);
+}
+
+#pragma mark Bindings Support
+
+- (void)bind:(NSString *)binding toObject:(id)observable withKeyPath:(NSString *)keyPath options:(NSDictionary *)options
+{
+    if([binding isEqualToString:@"state"])
+    {
+        [observable addObserver:self forKeyPath:keyPath options:0 context:StateObservationContext];
+        
+        [self setObservedObjectForState:observable];
+        [self setObservedKeyPathForState:keyPath];
+    }
+    else if ([binding isEqualToString:@"enabled"])
+    {
+        [observable addObserver:self forKeyPath:keyPath options:0 context:EnabledObservationContext];
+        
+        [self setObservedObjectForEnabled:observable];
+        [self setObservedKeyPathForEnabled:keyPath];
+    }
+     
+    [super bind:binding toObject:observable withKeyPath:keyPath options:options];
+    [self updateUI];
+}
+
+- (void)unbind:bindingName
+{
+    if ([bindingName isEqualToString:@"state"])
+    {
+        [observedObjectForState removeObserver:self
+                                    forKeyPath:observedKeyPathForState];
+        [self setObservedObjectForState:nil];
+        [self setObservedKeyPathForState:nil];
+    }   
+    if ([bindingName isEqualToString:@"enabled"])
+    {
+        [observedObjectForEnabled removeObserver:self
+                                     forKeyPath:observedKeyPathForEnabled];
+        [self setObservedObjectForEnabled:nil];
+        [self setObservedKeyPathForEnabled:nil];
+    }
+    [super unbind:bindingName];
+    [self updateUI];
 }
 
 @end
