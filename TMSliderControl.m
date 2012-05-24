@@ -119,7 +119,7 @@ static void *EnabledObservationContext = (void *)2092;
     sliderPosition.x = newXPosition;
     
     sliderHandle.position = sliderPosition;
-    self.layer.opacity = (self.enabled ? 1.0 : 0.25);
+    self.layer.opacity = (self.enabled ? 1.0 : [self disabledOpacity]);
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -170,9 +170,11 @@ static void *EnabledObservationContext = (void *)2092;
 
 - (void)mouseDragged:(NSEvent*)theEvent
 {
-	NSPoint mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	hasDragged = YES;
-    
+	if(self.enabled)
+	{
+		NSPoint mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+		hasDragged = YES;
+		
 		// center the rect around the mouse point
         
 		float newXPosition = mousePoint.x - mouseDownPosition.x;
@@ -190,6 +192,7 @@ static void *EnabledObservationContext = (void *)2092;
         [CATransaction setDisableActions:YES];
         sliderHandle.position = sliderPosition;
         [CATransaction commit];
+	}
 }
 
 
@@ -247,6 +250,11 @@ static void *EnabledObservationContext = (void *)2092;
 {
     handleControlRectOff = CGRectMake(-2,1, 44, 27);
     handleControlRectOn = CGRectMake([self bounds].size.width - handleControlRectOff.size.width + 2,1, 44, 27);
+}
+
+- (CGFloat)disabledOpacity
+{
+	return 0.25;
 }
 
 #pragma mark Bindings Support

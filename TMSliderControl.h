@@ -52,6 +52,7 @@ typedef enum
 - (void)mouseUp:(NSEvent*)theEvent;
 
 - (void)layoutHandle;
+- (CGFloat)disabledOpacity;
 
 @property (nonatomic, retain) CALayer *sliderWell;
 @property (nonatomic, retain) CALayer *overlayMask;
