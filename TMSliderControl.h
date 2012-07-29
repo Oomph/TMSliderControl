@@ -51,6 +51,9 @@ typedef enum
 - (void)mouseDragged:(NSEvent*)theEvent;
 - (void)mouseUp:(NSEvent*)theEvent;
 
+- (IBAction)moveLeft:(id)sender;
+- (IBAction)moveRight:(id)sender;
+
 - (void)layoutHandle;
 - (CGFloat)disabledOpacity;
 

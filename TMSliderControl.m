@@ -149,6 +149,11 @@ static void *EnabledObservationContext = (void *)2092;
     return YES;
 }
 
+- (BOOL)canBecomeKeyView
+{
+    return YES;
+}
+
 - (void)mouseDown:(NSEvent*)theEvent
 {
 	if(self.enabled)
@@ -250,6 +255,16 @@ static void *EnabledObservationContext = (void *)2092;
 {
     handleControlRectOff = CGRectMake(-2,1, 44, 27);
     handleControlRectOn = CGRectMake([self bounds].size.width - handleControlRectOff.size.width + 2,1, 44, 27);
+}
+
+- (IBAction)moveLeft:(id)sender
+{
+    self.state = NO;
+}
+
+- (IBAction)moveRight:(id)sender
+{
+    self.state = YES;
 }
 
 - (CGFloat)disabledOpacity
