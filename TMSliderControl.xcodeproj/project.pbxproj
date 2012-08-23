@@ -23,6 +23,14 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		938A6C0F154F47A6007FC919 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 938A6C0E154F47A6007FC919 /* QuartzCore.framework */; };
 		938A6C10154F48A0007FC919 /* TMSliderControlSmall.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8F327612BE9303009B2446 /* TMSliderControlSmall.m */; };
+		93F216EE15E5BB7500343EB1 /* OverlayMask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216E615E5BB7500343EB1 /* OverlayMask@2x.png */; };
+		93F216EF15E5BB7500343EB1 /* SliderHandle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216E715E5BB7500343EB1 /* SliderHandle@2x.png */; };
+		93F216F015E5BB7500343EB1 /* SliderHandleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216E815E5BB7500343EB1 /* SliderHandleDown@2x.png */; };
+		93F216F115E5BB7500343EB1 /* SliderWell@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216E915E5BB7500343EB1 /* SliderWell@2x.png */; };
+		93F216F215E5BB7500343EB1 /* SmallSliderHandle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216EA15E5BB7500343EB1 /* SmallSliderHandle@2x.png */; };
+		93F216F315E5BB7500343EB1 /* SmallSliderHandleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216EB15E5BB7500343EB1 /* SmallSliderHandleDown@2x.png */; };
+		93F216F415E5BB7500343EB1 /* SmallSliderWellOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216EC15E5BB7500343EB1 /* SmallSliderWellOff@2x.png */; };
+		93F216F515E5BB7500343EB1 /* SmallSliderWellOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216ED15E5BB7500343EB1 /* SmallSliderWellOn@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +59,14 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* TMSliderControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TMSliderControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		938A6C0E154F47A6007FC919 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../../../../../../System/Library/Frameworks/QuartzCore.framework; sourceTree = "<group>"; };
+		93F216E615E5BB7500343EB1 /* OverlayMask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OverlayMask@2x.png"; sourceTree = "<group>"; };
+		93F216E715E5BB7500343EB1 /* SliderHandle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SliderHandle@2x.png"; sourceTree = "<group>"; };
+		93F216E815E5BB7500343EB1 /* SliderHandleDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SliderHandleDown@2x.png"; sourceTree = "<group>"; };
+		93F216E915E5BB7500343EB1 /* SliderWell@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SliderWell@2x.png"; sourceTree = "<group>"; };
+		93F216EA15E5BB7500343EB1 /* SmallSliderHandle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SmallSliderHandle@2x.png"; sourceTree = "<group>"; };
+		93F216EB15E5BB7500343EB1 /* SmallSliderHandleDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SmallSliderHandleDown@2x.png"; sourceTree = "<group>"; };
+		93F216EC15E5BB7500343EB1 /* SmallSliderWellOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SmallSliderWellOff@2x.png"; sourceTree = "<group>"; };
+		93F216ED15E5BB7500343EB1 /* SmallSliderWellOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SmallSliderWellOn@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,13 +147,21 @@
 			isa = PBXGroup;
 			children = (
 				5F8F327912BE951C009B2446 /* SmallSliderHandle.png */,
+				93F216EA15E5BB7500343EB1 /* SmallSliderHandle@2x.png */,
 				5F8F327A12BE951C009B2446 /* SmallSliderHandleDown.png */,
+				93F216EB15E5BB7500343EB1 /* SmallSliderHandleDown@2x.png */,
 				5F8F327B12BE951C009B2446 /* SmallSliderWellOff.png */,
+				93F216EC15E5BB7500343EB1 /* SmallSliderWellOff@2x.png */,
 				5F8F327C12BE951C009B2446 /* SmallSliderWellOn.png */,
+				93F216ED15E5BB7500343EB1 /* SmallSliderWellOn@2x.png */,
 				5F9409230F3656C900317331 /* SliderWell.png */,
+				93F216E915E5BB7500343EB1 /* SliderWell@2x.png */,
 				5F9409240F3656C900317331 /* SliderHandleDown.png */,
+				93F216E815E5BB7500343EB1 /* SliderHandleDown@2x.png */,
 				5F9409250F3656C900317331 /* SliderHandle.png */,
+				93F216E715E5BB7500343EB1 /* SliderHandle@2x.png */,
 				5F9409290F3656C900317331 /* OverlayMask.png */,
+				93F216E615E5BB7500343EB1 /* OverlayMask@2x.png */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -214,6 +238,14 @@
 				5F8F327E12BE951C009B2446 /* SmallSliderHandleDown.png in Resources */,
 				5F8F327F12BE951C009B2446 /* SmallSliderWellOff.png in Resources */,
 				5F8F328012BE951C009B2446 /* SmallSliderWellOn.png in Resources */,
+				93F216EE15E5BB7500343EB1 /* OverlayMask@2x.png in Resources */,
+				93F216EF15E5BB7500343EB1 /* SliderHandle@2x.png in Resources */,
+				93F216F015E5BB7500343EB1 /* SliderHandleDown@2x.png in Resources */,
+				93F216F115E5BB7500343EB1 /* SliderWell@2x.png in Resources */,
+				93F216F215E5BB7500343EB1 /* SmallSliderHandle@2x.png in Resources */,
+				93F216F315E5BB7500343EB1 /* SmallSliderHandleDown@2x.png in Resources */,
+				93F216F415E5BB7500343EB1 /* SmallSliderWellOff@2x.png in Resources */,
+				93F216F515E5BB7500343EB1 /* SmallSliderWellOn@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
