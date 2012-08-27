@@ -79,9 +79,14 @@ static void *EnabledObservationContext = (void *)2092;
         [self setLayer:[CALayer layer]];
         [self setWantsLayer:YES];
         
+        CALayer *mask = [CALayer layer];
+        mask.frame = self.bounds;
+        mask.contents = [[self class] sliderWellOff];
+        
         self.sliderWell = [CALayer layer];
-        sliderWell.frame = NSRectToCGRect(self.bounds);
+        sliderWell.frame = self.bounds;
         sliderWell.contents = [[self class] sliderWellOff];
+        sliderWell.mask = mask;
         [self.layer addSublayer:sliderWell];
         
         self.sliderHandle = [CALayer layer];
@@ -90,7 +95,7 @@ static void *EnabledObservationContext = (void *)2092;
         [sliderWell addSublayer:sliderHandle];
 
         self.overlayMask = [CALayer layer];
-        overlayMask.frame = NSRectToCGRect(self.bounds);
+        overlayMask.frame = self.bounds;
         overlayMask.contents = [[self class] overlayMask];
         [self.layer addSublayer:overlayMask];
     }
