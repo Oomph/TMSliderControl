@@ -187,7 +187,7 @@ static void *EnabledObservationContext = (void *)2092;
 		
 		// center the rect around the mouse point
         
-		float newXPosition = mousePoint.x - mouseDownPosition.x;
+		CGFloat newXPosition = mousePoint.x - mouseDownPosition.x;
         
         // clamp the position .
         if (newXPosition < CGRectGetMidX(handleControlRectOff))
@@ -215,7 +215,7 @@ static void *EnabledObservationContext = (void *)2092;
         sliderHandle.contents = sliderHandleImage;
         [CATransaction commit];
         
-        float minimumMovement = [self minimumMovement];
+        CGFloat minimumMovement = [self minimumMovement];
         if(hasDragged && state != kTMSliderControlState_Inactive)
         {
             if (sliderHandle.frame.origin.x < [self bounds].size.width - sliderHandle.frame.size.width - minimumMovement)
