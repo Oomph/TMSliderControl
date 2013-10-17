@@ -13,10 +13,6 @@ static void *StateObservationContext = (void *)2091;
 static void *EnabledObservationContext = (void *)2092;
 
 @implementation TMSliderControl
-@synthesize state, enabled;
-@synthesize sliderHandleImage, sliderHandleDownImage;
-@synthesize sliderWell, sliderHandle, overlayMask;
-@synthesize target, action;
 
 //bindings support
 @synthesize observedObjectForState;
@@ -84,20 +80,20 @@ static void *EnabledObservationContext = (void *)2092;
         mask.contents = [[self class] sliderWellOff];
         
         self.sliderWell = [CALayer layer];
-        sliderWell.frame = self.bounds;
-        sliderWell.contents = [[self class] sliderWellOff];
-        sliderWell.mask = mask;
-        [self.layer addSublayer:sliderWell];
+        _sliderWell.frame = self.bounds;
+        _sliderWell.contents = [[self class] sliderWellOff];
+        _sliderWell.mask = mask;
+        [self.layer addSublayer:_sliderWell];
         
         self.sliderHandle = [CALayer layer];
-        sliderHandle.frame = handleControlRectOff;
-        sliderHandle.contents = sliderHandleImage;
-        [sliderWell addSublayer:sliderHandle];
+        _sliderHandle.frame = handleControlRectOff;
+        _sliderHandle.contents = _sliderHandleImage;
+        [_sliderWell addSublayer:_sliderHandle];
 
         self.overlayMask = [CALayer layer];
-        overlayMask.frame = self.bounds;
-        overlayMask.contents = [[self class] overlayMask];
-        [self.layer addSublayer:overlayMask];
+        _overlayMask.frame = self.bounds;
+        _overlayMask.contents = [[self class] overlayMask];
+        [self.layer addSublayer:_overlayMask];
     }
     return self;
 }
@@ -107,12 +103,14 @@ static void *EnabledObservationContext = (void *)2092;
     [self unbind:@"state"];
     [self unbind:@"enabled"];
 
-    [sliderWell release];
-    [overlayMask release];
-    [sliderHandle release];
-    [sliderHandleImage release];
-    [sliderHandleDownImage release];
+    [_sliderWell release];
+    [_overlayMask release];
+    [_sliderHandle release];
+    [_sliderHandleImage release];
+    [_sliderHandleDownImage release];
 
+    [_purposeDescription release];
+    
     [super dealloc];
 }
 
@@ -120,10 +118,10 @@ static void *EnabledObservationContext = (void *)2092;
 {
     CGFloat newXPosition = (self.state == kTMSliderControlState_Active ? CGRectGetMidX(handleControlRectOn) : CGRectGetMidX(handleControlRectOff));
     
-    CGPoint sliderPosition = sliderHandle.position;
+    CGPoint sliderPosition = _sliderHandle.position;
     sliderPosition.x = newXPosition;
     
-    sliderHandle.position = sliderPosition;
+    _sliderHandle.position = sliderPosition;
     self.layer.opacity = (self.enabled ? 1.0 : [self disabledOpacity]);
 }
 
@@ -151,12 +149,22 @@ static void *EnabledObservationContext = (void *)2092;
 
 - (BOOL)acceptsFirstResponder
 {
-    return YES;
+    return [NSApp isFullKeyboardAccessEnabled];
 }
 
 - (BOOL)canBecomeKeyView
 {
-    return YES;
+    return [NSApp isFullKeyboardAccessEnabled];
+}
+
+- (NSRect)focusRingMaskBounds
+{
+    return [self bounds];
+}
+
+- (void)drawFocusRingMask
+{
+    [self.layer renderInContext:[[NSGraphicsContext currentContext] graphicsPort]];
 }
 
 - (void)mouseDown:(NSEvent*)theEvent
@@ -166,12 +174,12 @@ static void *EnabledObservationContext = (void *)2092;
         CGPoint mousePoint = NSPointToCGPoint([self convertPoint:[theEvent locationInWindow] fromView:nil]);
         hasDragged = NO;
         // down on the position control rect
-        if(CGRectContainsPoint(sliderHandle.frame, mousePoint))
+        if(CGRectContainsPoint(_sliderHandle.frame, mousePoint))
         {
-            mouseDownPosition = CGPointMake(mousePoint.x - sliderHandle.position.x, 0);
+            mouseDownPosition = CGPointMake(mousePoint.x - _sliderHandle.position.x, 0);
             [CATransaction begin];
             [CATransaction setDisableActions:YES];
-            sliderHandle.contents = sliderHandleDownImage;
+            _sliderHandle.contents = _sliderHandleDownImage;
             [CATransaction commit];
         }
     }
@@ -195,12 +203,12 @@ static void *EnabledObservationContext = (void *)2092;
         if (newXPosition > CGRectGetMidX(handleControlRectOn))
             newXPosition = CGRectGetMidX(handleControlRectOn);
         
-        CGPoint sliderPosition = sliderHandle.position;
+        CGPoint sliderPosition = _sliderHandle.position;
         sliderPosition.x = newXPosition;
         
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
-        sliderHandle.position = sliderPosition;
+        _sliderHandle.position = sliderPosition;
         [CATransaction commit];
 	}
 }
@@ -212,19 +220,19 @@ static void *EnabledObservationContext = (void *)2092;
     {
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
-        sliderHandle.contents = sliderHandleImage;
+        _sliderHandle.contents = _sliderHandleImage;
         [CATransaction commit];
         
         CGFloat minimumMovement = [self minimumMovement];
-        if(hasDragged && state != kTMSliderControlState_Inactive)
+        if(hasDragged && _state != kTMSliderControlState_Inactive)
         {
-            if (sliderHandle.frame.origin.x < [self bounds].size.width - sliderHandle.frame.size.width - minimumMovement)
+            if (_sliderHandle.frame.origin.x < [self bounds].size.width - _sliderHandle.frame.size.width - minimumMovement)
             {
                 // moved it enough to set it
                 self.state = kTMSliderControlState_Inactive;
                 if (observedObjectForState)
                 {
-                    [observedObjectForState setValue: [NSNumber numberWithBool:state]
+                    [observedObjectForState setValue: [NSNumber numberWithBool:_state]
                                           forKeyPath: observedKeyPathForState];
                 }
            }
@@ -234,7 +242,7 @@ static void *EnabledObservationContext = (void *)2092;
                 self.state = kTMSliderControlState_Active;
                 if (observedObjectForState)
                 {
-                    [observedObjectForState setValue: [NSNumber numberWithBool:state]
+                    [observedObjectForState setValue: [NSNumber numberWithBool:_state]
                                           forKeyPath: observedKeyPathForState];
                 }
             }
@@ -244,14 +252,14 @@ static void *EnabledObservationContext = (void *)2092;
             self.state = !self.state;
             if (observedObjectForState)
             {
-                [observedObjectForState setValue: [NSNumber numberWithBool:state]
+                [observedObjectForState setValue: [NSNumber numberWithBool:_state]
                                       forKeyPath: observedKeyPathForState];
             }
         }
         [self updateUI];
 
-        if(target && [target respondsToSelector:action])
-            [target performSelector:action withObject:self];
+        if(_target && [_target respondsToSelector:_action])
+            [_target performSelector:_action withObject:self];
         hasDragged = NO;
     }
 }
@@ -275,6 +283,11 @@ static void *EnabledObservationContext = (void *)2092;
 - (CGFloat)disabledOpacity
 {
 	return 0.25;
+}
+
+- (void)drawRect:(NSRect)dirtyRect
+{
+    [super drawRect:[self bounds]];
 }
 
 #pragma mark Bindings Support
@@ -318,6 +331,143 @@ static void *EnabledObservationContext = (void *)2092;
     }
     [super unbind:bindingName];
     [self updateUI];
+}
+
+#pragma mark -
+
+- (void)setState:(BOOL)state
+{
+	if (_state != state)
+	{
+		_state = state;
+		NSAccessibilityPostNotification(self, NSAccessibilityValueChangedNotification);
+	}
+}
+
+#pragma mark - Accessibility
+
+- (BOOL)accessibilityIsIgnored
+{
+	return NO;
+}
+
+- (NSArray *)accessibilityAttributeNames
+{
+	static NSArray *attributes = nil;
+	if (attributes == nil)
+	{
+		NSMutableArray *mutableAttributes = [[super accessibilityAttributeNames] mutableCopy];
+		if (mutableAttributes == nil)
+			mutableAttributes = [NSMutableArray new];
+		
+		// Add attributes
+		if (![mutableAttributes containsObject:NSAccessibilityValueAttribute])
+			[mutableAttributes addObject:NSAccessibilityValueAttribute];
+		
+		if (![mutableAttributes containsObject:NSAccessibilityValueDescriptionAttribute])
+			[mutableAttributes addObject:NSAccessibilityValueDescriptionAttribute];
+		
+		if (![mutableAttributes containsObject:NSAccessibilityEnabledAttribute])
+			[mutableAttributes addObject:NSAccessibilityEnabledAttribute];
+		
+		if (![mutableAttributes containsObject:NSAccessibilityDescriptionAttribute])
+			[mutableAttributes addObject:NSAccessibilityDescriptionAttribute];
+		        
+		// Remove attributes
+		if ([mutableAttributes containsObject:NSAccessibilityChildrenAttribute])
+			[mutableAttributes removeObject:NSAccessibilityChildrenAttribute];
+		
+		attributes = [mutableAttributes copy];
+		[mutableAttributes release];
+	}
+	return attributes;
+}
+
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	id retVal = nil;
+	if ([attribute isEqualToString:NSAccessibilityRoleAttribute])
+		retVal = NSAccessibilityCheckBoxRole;
+	else if ([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute])
+		retVal = [NSString stringWithFormat:@"%@ %@", self.purposeDescription, NSLocalizedString(@"switch", @"") ];
+	else if ([attribute isEqualToString:NSAccessibilityValueAttribute])
+		retVal = [NSNumber numberWithInt:self.state];
+	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
+		retVal = [NSNumber numberWithBool:self.enabled];
+	else if ([attribute isEqualToString:NSAccessibilityDescriptionAttribute])
+		retVal = NSLocalizedString(@"toggle", @"");
+	else if ([attribute isEqualToString:NSAccessibilityValueDescriptionAttribute])
+		retVal = self.state ? NSLocalizedString(@"on", @"") : NSLocalizedString(@"off", @"");
+    else
+		retVal = [super accessibilityAttributeValue:attribute];
+	return retVal;
+}
+
+- (BOOL)accessibilityIsAttributeSettable:(NSString *)attribute
+{
+	BOOL retVal;
+	if ([attribute isEqualToString:NSAccessibilityValueAttribute])
+		retVal = YES;
+	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
+		retVal = YES;
+	else if ([attribute isEqualToString:NSAccessibilityDescriptionAttribute])
+		retVal = NO;
+	else
+		retVal = [super accessibilityIsAttributeSettable:attribute];
+	return retVal;
+}
+
+- (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute
+{
+	if ([attribute isEqualToString:NSAccessibilityValueAttribute])
+	{
+		self.state = [value boolValue];
+		[self updateUI];
+	}
+	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
+	{
+		self.enabled = [value boolValue];
+		[self updateUI];
+	}
+	else
+		[super accessibilitySetValue:value forAttribute:attribute];
+}
+
+- (NSArray *)accessibilityActionNames
+{
+	static NSArray *actions = nil;
+	if (actions == nil)
+	{
+		NSMutableArray *mutableActions = [[super accessibilityActionNames] mutableCopy];
+		if (mutableActions == nil)
+			mutableActions = [NSMutableArray new];
+		if (![mutableActions containsObject:NSAccessibilityPressAction])
+			[mutableActions addObject:NSAccessibilityPressAction];
+		actions = [mutableActions copy];
+		[mutableActions release];
+	}
+	return actions;
+}
+
+- (NSString *)accessibilityActionDescription:(NSString *)actionString
+{
+	id retVal = nil;
+	if ([actionString isEqualToString:NSAccessibilityPressAction])
+		retVal = self.state ? NSLocalizedString(@"turn off", @"") : NSLocalizedString(@"turn on", @"");
+	else
+		retVal = [super accessibilityActionDescription:actionString];
+	return retVal;
+}
+
+- (void)accessibilityPerformAction:(NSString *)actionString
+{
+	if ([actionString isEqualToString:NSAccessibilityPressAction])
+	{
+		self.state = !self.state;
+		[self updateUI];
+	}
+	else
+		[super accessibilityPerformAction:actionString];
 }
 
 @end

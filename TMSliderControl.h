@@ -17,12 +17,7 @@ typedef enum
 
 @class TMSliderControlHandle;
 
-@interface TMSliderControl : NSControl {
-    CALayer *sliderWell;
-    CALayer *overlayMask;
-    NSImage *sliderHandleImage;
-    NSImage *sliderHandleDownImage;
-    CALayer *sliderHandle;
+@interface TMSliderControl : NSView {
     
     // drawing 
     CGRect handleControlRectOn;
@@ -31,11 +26,6 @@ typedef enum
     
     // state
     BOOL hasDragged;
-    BOOL state;
-    BOOL enabled;
-    
-    id target;
-    SEL action;
     
     id observedObjectForState;
     NSString *observedKeyPathForState;
@@ -73,6 +63,8 @@ typedef enum
 
 @property (nonatomic, retain) id observedObjectForEnabled;
 @property (nonatomic, copy) NSString *observedKeyPathForEnabled;
+
+@property (nonatomic, retain) NSString *purposeDescription;
 
 @end
 
