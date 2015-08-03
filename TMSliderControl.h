@@ -8,12 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef enum 
+typedef NS_ENUM(unsigned int, TMSliderControlState) 
 {
     kTMSliderControlState_Inactive = 0,
     kTMSliderControlState_Active = 1
   
-}TMSliderControlState;
+};
 
 @class TMSliderControlHandle;
 
@@ -45,26 +45,26 @@ typedef enum
 - (IBAction)moveRight:(id)sender;
 
 - (void)layoutHandle;
-- (CGFloat)disabledOpacity;
+@property (nonatomic, readonly) CGFloat disabledOpacity;
 
-@property (nonatomic, retain) CALayer *sliderWell;
-@property (nonatomic, retain) CALayer *overlayMask;
-@property (nonatomic, retain) NSImage *sliderHandleImage;
-@property (nonatomic, retain) NSImage *sliderHandleDownImage;
-@property (nonatomic, retain) CALayer *sliderHandle;
+@property (nonatomic, strong) CALayer *sliderWell;
+@property (nonatomic, strong) CALayer *overlayMask;
+@property (nonatomic, strong) NSImage *sliderHandleImage;
+@property (nonatomic, strong) NSImage *sliderHandleDownImage;
+@property (nonatomic, strong) CALayer *sliderHandle;
 
 @property (nonatomic, assign) BOOL enabled;
 @property (nonatomic, assign) BOOL state;
-@property (nonatomic, assign) id target;
+@property (nonatomic, unsafe_unretained) id target;
 @property (nonatomic, assign) SEL action;
 
-@property (nonatomic, retain) id observedObjectForState;
+@property (nonatomic, strong) id observedObjectForState;
 @property (nonatomic, copy) NSString *observedKeyPathForState;
 
-@property (nonatomic, retain) id observedObjectForEnabled;
+@property (nonatomic, strong) id observedObjectForEnabled;
 @property (nonatomic, copy) NSString *observedKeyPathForEnabled;
 
-@property (nonatomic, retain) NSString *purposeDescription;
+@property (nonatomic, strong) NSString *purposeDescription;
 
 @end
 

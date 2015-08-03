@@ -61,7 +61,7 @@ static void *EnabledObservationContext = (void *)2092;
     return [NSImage imageNamed:@"OverlayMask"];
 }
 
-- (id)initWithFrame:(NSRect)frame {
+- (instancetype)initWithFrame:(NSRect)frame {
     if ((self = [super initWithFrame:frame])) {
         // Initialization code here.
         [self layoutHandle];
@@ -103,15 +103,8 @@ static void *EnabledObservationContext = (void *)2092;
     [self unbind:@"state"];
     [self unbind:@"enabled"];
 
-    [_sliderWell release];
-    [_overlayMask release];
-    [_sliderHandle release];
-    [_sliderHandleImage release];
-    [_sliderHandleDownImage release];
 
-    [_purposeDescription release];
     
-    [super dealloc];
 }
 
 - (void)updateUI
@@ -232,7 +225,7 @@ static void *EnabledObservationContext = (void *)2092;
                 self.state = kTMSliderControlState_Inactive;
                 if (observedObjectForState)
                 {
-                    [observedObjectForState setValue: [NSNumber numberWithBool:_state]
+                    [observedObjectForState setValue: @(_state)
                                           forKeyPath: observedKeyPathForState];
                 }
            }
@@ -242,7 +235,7 @@ static void *EnabledObservationContext = (void *)2092;
                 self.state = kTMSliderControlState_Active;
                 if (observedObjectForState)
                 {
-                    [observedObjectForState setValue: [NSNumber numberWithBool:_state]
+                    [observedObjectForState setValue: @(_state)
                                           forKeyPath: observedKeyPathForState];
                 }
             }
@@ -252,7 +245,7 @@ static void *EnabledObservationContext = (void *)2092;
             self.state = !self.state;
             if (observedObjectForState)
             {
-                [observedObjectForState setValue: [NSNumber numberWithBool:_state]
+                [observedObjectForState setValue: @(_state)
                                       forKeyPath: observedKeyPathForState];
             }
         }
@@ -378,7 +371,6 @@ static void *EnabledObservationContext = (void *)2092;
 			[mutableAttributes removeObject:NSAccessibilityChildrenAttribute];
 		
 		attributes = [mutableAttributes copy];
-		[mutableAttributes release];
 	}
 	return attributes;
 }
@@ -391,9 +383,9 @@ static void *EnabledObservationContext = (void *)2092;
 	else if ([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute])
 		retVal = [NSString stringWithFormat:@"%@ %@", self.purposeDescription, NSLocalizedString(@"switch", @"") ];
 	else if ([attribute isEqualToString:NSAccessibilityValueAttribute])
-		retVal = [NSNumber numberWithInt:self.state];
+		retVal = @(self.state);
 	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
-		retVal = [NSNumber numberWithBool:self.enabled];
+		retVal = @(self.enabled);
 	else if ([attribute isEqualToString:NSAccessibilityDescriptionAttribute])
 		retVal = NSLocalizedString(@"toggle", @"");
 	else if ([attribute isEqualToString:NSAccessibilityValueDescriptionAttribute])
@@ -444,7 +436,6 @@ static void *EnabledObservationContext = (void *)2092;
 		if (![mutableActions containsObject:NSAccessibilityPressAction])
 			[mutableActions addObject:NSAccessibilityPressAction];
 		actions = [mutableActions copy];
-		[mutableActions release];
 	}
 	return actions;
 }
