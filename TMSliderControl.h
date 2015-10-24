@@ -65,6 +65,7 @@ typedef NS_ENUM(unsigned int, TMSliderControlState)
 @property (nonatomic, copy) NSString *observedKeyPathForEnabled;
 
 @property (nonatomic, strong) NSString *purposeDescription;
+@property (nonatomic, strong) NSString *accessibilityText;
 
 @end
 

@@ -115,7 +115,7 @@ static void *EnabledObservationContext = (void *)2092;
     sliderPosition.x = newXPosition;
     
     _sliderHandle.position = sliderPosition;
-    self.layer.opacity = (self.enabled ? 1.0 : [self disabledOpacity]);
+    self.layer.opacity = (float)(self.enabled ? 1.0f : [self disabledOpacity]);
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -289,14 +289,14 @@ static void *EnabledObservationContext = (void *)2092;
 {
     if([binding isEqualToString:@"state"])
     {
-        [observable addObserver:self forKeyPath:keyPath options:0 context:StateObservationContext];
+        [observable addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:StateObservationContext];
         
         [self setObservedObjectForState:observable];
         [self setObservedKeyPathForState:keyPath];
     }
     else if ([binding isEqualToString:@"enabled"])
     {
-        [observable addObserver:self forKeyPath:keyPath options:0 context:EnabledObservationContext];
+        [observable addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:EnabledObservationContext];
         
         [self setObservedObjectForEnabled:observable];
         [self setObservedKeyPathForEnabled:keyPath];
@@ -339,126 +339,25 @@ static void *EnabledObservationContext = (void *)2092;
 
 #pragma mark - Accessibility
 
-- (BOOL)accessibilityIsIgnored
+- (id)accessibilityValue
 {
-	return NO;
+    return [NSNumber numberWithBool:self.state];
 }
 
-- (NSArray *)accessibilityAttributeNames
+- (id)accessibilityLabel
 {
-	static NSArray *attributes = nil;
-	if (attributes == nil)
-	{
-		NSMutableArray *mutableAttributes = [[super accessibilityAttributeNames] mutableCopy];
-		if (mutableAttributes == nil)
-			mutableAttributes = [NSMutableArray new];
-		
-		// Add attributes
-		if (![mutableAttributes containsObject:NSAccessibilityValueAttribute])
-			[mutableAttributes addObject:NSAccessibilityValueAttribute];
-		
-		if (![mutableAttributes containsObject:NSAccessibilityValueDescriptionAttribute])
-			[mutableAttributes addObject:NSAccessibilityValueDescriptionAttribute];
-		
-		if (![mutableAttributes containsObject:NSAccessibilityEnabledAttribute])
-			[mutableAttributes addObject:NSAccessibilityEnabledAttribute];
-		
-		if (![mutableAttributes containsObject:NSAccessibilityDescriptionAttribute])
-			[mutableAttributes addObject:NSAccessibilityDescriptionAttribute];
-		        
-		// Remove attributes
-		if ([mutableAttributes containsObject:NSAccessibilityChildrenAttribute])
-			[mutableAttributes removeObject:NSAccessibilityChildrenAttribute];
-		
-		attributes = [mutableAttributes copy];
-	}
-	return attributes;
+    if (self.accessibilityText) {
+        return self.accessibilityText;
+    }
+    
+    return NSLocalizedStringWithDefaultValue(@"LOCALIZED_SWITCH_LABEL", @"Localizable", [NSBundle mainBundle], @"switch", @"switch label when no accessibility text is set");;
 }
 
-- (id)accessibilityAttributeValue:(NSString *)attribute
+- (BOOL)accessibilityPerformPress
 {
-	id retVal = nil;
-	if ([attribute isEqualToString:NSAccessibilityRoleAttribute])
-		retVal = NSAccessibilityCheckBoxRole;
-	else if ([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute])
-		retVal = [NSString stringWithFormat:@"%@ %@", self.purposeDescription, NSLocalizedString(@"switch", @"") ];
-	else if ([attribute isEqualToString:NSAccessibilityValueAttribute])
-		retVal = @(self.state);
-	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
-		retVal = @(self.enabled);
-	else if ([attribute isEqualToString:NSAccessibilityDescriptionAttribute])
-		retVal = NSLocalizedString(@"toggle", @"");
-	else if ([attribute isEqualToString:NSAccessibilityValueDescriptionAttribute])
-		retVal = self.state ? NSLocalizedString(@"on", @"") : NSLocalizedString(@"off", @"");
-    else
-		retVal = [super accessibilityAttributeValue:attribute];
-	return retVal;
-}
-
-- (BOOL)accessibilityIsAttributeSettable:(NSString *)attribute
-{
-	BOOL retVal;
-	if ([attribute isEqualToString:NSAccessibilityValueAttribute])
-		retVal = YES;
-	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
-		retVal = YES;
-	else if ([attribute isEqualToString:NSAccessibilityDescriptionAttribute])
-		retVal = NO;
-	else
-		retVal = [super accessibilityIsAttributeSettable:attribute];
-	return retVal;
-}
-
-- (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute
-{
-	if ([attribute isEqualToString:NSAccessibilityValueAttribute])
-	{
-		self.state = [value boolValue];
-		[self updateUI];
-	}
-	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
-	{
-		self.enabled = [value boolValue];
-		[self updateUI];
-	}
-	else
-		[super accessibilitySetValue:value forAttribute:attribute];
-}
-
-- (NSArray *)accessibilityActionNames
-{
-	static NSArray *actions = nil;
-	if (actions == nil)
-	{
-		NSMutableArray *mutableActions = [[super accessibilityActionNames] mutableCopy];
-		if (mutableActions == nil)
-			mutableActions = [NSMutableArray new];
-		if (![mutableActions containsObject:NSAccessibilityPressAction])
-			[mutableActions addObject:NSAccessibilityPressAction];
-		actions = [mutableActions copy];
-	}
-	return actions;
-}
-
-- (NSString *)accessibilityActionDescription:(NSString *)actionString
-{
-	id retVal = nil;
-	if ([actionString isEqualToString:NSAccessibilityPressAction])
-		retVal = self.state ? NSLocalizedString(@"turn off", @"") : NSLocalizedString(@"turn on", @"");
-	else
-		retVal = [super accessibilityActionDescription:actionString];
-	return retVal;
-}
-
-- (void)accessibilityPerformAction:(NSString *)actionString
-{
-	if ([actionString isEqualToString:NSAccessibilityPressAction])
-	{
-		self.state = !self.state;
-		[self updateUI];
-	}
-	else
-		[super accessibilityPerformAction:actionString];
+    self.state = !self.state;
+    [self updateUI];
+    return YES;
 }
 
 @end
