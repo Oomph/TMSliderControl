@@ -8,49 +8,64 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef enum 
+typedef NS_ENUM(unsigned int, TMSliderControlState) 
 {
     kTMSliderControlState_Inactive = 0,
     kTMSliderControlState_Active = 1
   
-}TMSliderControlState;
+};
 
 @class TMSliderControlHandle;
 
-@interface TMSliderControl : NSControl {
-    NSImage *sliderWell;
-    NSImage *overlayMask;
-    NSImage *sliderHandle;
-    NSImage *sliderHandleDown;
-    TMSliderControlHandle *sliderHandleView;
+@interface TMSliderControl : NSView {
     
     // drawing 
-	NSRect handleControlRect;
-    NSRect handleControlRectOn;
-    NSRect handleControlRectOff;
-    NSPoint mouseDownPosition;
+    CGRect handleControlRectOn;
+    CGRect handleControlRectOff;
+    CGPoint mouseDownPosition;
     
     // state
-    TMSliderControlState controlState;
     BOOL hasDragged;
-    BOOL state;
+    
+    id observedObjectForState;
+    NSString *observedKeyPathForState;
 
-    id target;
-    SEL action;
+    id observedObjectForEnabled;
+    NSString *observedKeyPathForEnabled;
 }
+
+- (void)updateUI;
 
 // events
 - (void)mouseDown:(NSEvent*)theEvent;
 - (void)mouseDragged:(NSEvent*)theEvent;
 - (void)mouseUp:(NSEvent*)theEvent;
 
-- (BOOL)state;
-- (void)setState:(BOOL)newState;
+- (IBAction)moveLeft:(id)sender;
+- (IBAction)moveRight:(id)sender;
 
-- (void)setTarget:(id)anObject;
-- (id)target;
-- (void)setAction:(SEL)aSelector;
-- (SEL)action;
+- (void)layoutHandle;
+@property (nonatomic, readonly) CGFloat disabledOpacity;
+
+@property (nonatomic, strong) CALayer *sliderWell;
+@property (nonatomic, strong) CALayer *overlayMask;
+@property (nonatomic, strong) NSImage *sliderHandleImage;
+@property (nonatomic, strong) NSImage *sliderHandleDownImage;
+@property (nonatomic, strong) CALayer *sliderHandle;
+
+@property (nonatomic, assign) BOOL enabled;
+@property (nonatomic, assign) BOOL state;
+@property (nonatomic, unsafe_unretained) id target;
+@property (nonatomic, assign) SEL action;
+
+@property (nonatomic, strong) id observedObjectForState;
+@property (nonatomic, copy) NSString *observedKeyPathForState;
+
+@property (nonatomic, strong) id observedObjectForEnabled;
+@property (nonatomic, copy) NSString *observedKeyPathForEnabled;
+
+@property (nonatomic, strong) NSString *purposeDescription;
+@property (nonatomic, strong) NSString *accessibilityText;
 
 @end
 

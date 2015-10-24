@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
-		5F8F327712BE9303009B2446 /* TMSliderControlSmall.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8F327612BE9303009B2446 /* TMSliderControlSmall.m */; };
 		5F8F327D12BE951C009B2446 /* SmallSliderHandle.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F8F327912BE951C009B2446 /* SmallSliderHandle.png */; };
 		5F8F327E12BE951C009B2446 /* SmallSliderHandleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F8F327A12BE951C009B2446 /* SmallSliderHandleDown.png */; };
 		5F8F327F12BE951C009B2446 /* SmallSliderWellOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F8F327B12BE951C009B2446 /* SmallSliderWellOff.png */; };
@@ -22,6 +21,16 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		938A6C0F154F47A6007FC919 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 938A6C0E154F47A6007FC919 /* QuartzCore.framework */; };
+		938A6C10154F48A0007FC919 /* TMSliderControlSmall.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8F327612BE9303009B2446 /* TMSliderControlSmall.m */; };
+		93F216EE15E5BB7500343EB1 /* OverlayMask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216E615E5BB7500343EB1 /* OverlayMask@2x.png */; };
+		93F216EF15E5BB7500343EB1 /* SliderHandle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216E715E5BB7500343EB1 /* SliderHandle@2x.png */; };
+		93F216F015E5BB7500343EB1 /* SliderHandleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216E815E5BB7500343EB1 /* SliderHandleDown@2x.png */; };
+		93F216F115E5BB7500343EB1 /* SliderWell@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216E915E5BB7500343EB1 /* SliderWell@2x.png */; };
+		93F216F215E5BB7500343EB1 /* SmallSliderHandle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216EA15E5BB7500343EB1 /* SmallSliderHandle@2x.png */; };
+		93F216F315E5BB7500343EB1 /* SmallSliderHandleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216EB15E5BB7500343EB1 /* SmallSliderHandleDown@2x.png */; };
+		93F216F415E5BB7500343EB1 /* SmallSliderWellOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216EC15E5BB7500343EB1 /* SmallSliderWellOff@2x.png */; };
+		93F216F515E5BB7500343EB1 /* SmallSliderWellOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93F216ED15E5BB7500343EB1 /* SmallSliderWellOn@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +58,15 @@
 		5F9409290F3656C900317331 /* OverlayMask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OverlayMask.png; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* TMSliderControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TMSliderControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		938A6C0E154F47A6007FC919 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../../../../../../System/Library/Frameworks/QuartzCore.framework; sourceTree = "<group>"; };
+		93F216E615E5BB7500343EB1 /* OverlayMask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OverlayMask@2x.png"; sourceTree = "<group>"; };
+		93F216E715E5BB7500343EB1 /* SliderHandle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SliderHandle@2x.png"; sourceTree = "<group>"; };
+		93F216E815E5BB7500343EB1 /* SliderHandleDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SliderHandleDown@2x.png"; sourceTree = "<group>"; };
+		93F216E915E5BB7500343EB1 /* SliderWell@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SliderWell@2x.png"; sourceTree = "<group>"; };
+		93F216EA15E5BB7500343EB1 /* SmallSliderHandle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SmallSliderHandle@2x.png"; sourceTree = "<group>"; };
+		93F216EB15E5BB7500343EB1 /* SmallSliderHandleDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SmallSliderHandleDown@2x.png"; sourceTree = "<group>"; };
+		93F216EC15E5BB7500343EB1 /* SmallSliderWellOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SmallSliderWellOff@2x.png"; sourceTree = "<group>"; };
+		93F216ED15E5BB7500343EB1 /* SmallSliderWellOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SmallSliderWellOn@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				938A6C0F154F47A6007FC919 /* QuartzCore.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -105,6 +124,7 @@
 		29B97314FDCFA39411CA2CEA /* TMSliderControl */ = {
 			isa = PBXGroup;
 			children = (
+				938A6C0E154F47A6007FC919 /* QuartzCore.framework */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -127,13 +147,21 @@
 			isa = PBXGroup;
 			children = (
 				5F8F327912BE951C009B2446 /* SmallSliderHandle.png */,
+				93F216EA15E5BB7500343EB1 /* SmallSliderHandle@2x.png */,
 				5F8F327A12BE951C009B2446 /* SmallSliderHandleDown.png */,
+				93F216EB15E5BB7500343EB1 /* SmallSliderHandleDown@2x.png */,
 				5F8F327B12BE951C009B2446 /* SmallSliderWellOff.png */,
+				93F216EC15E5BB7500343EB1 /* SmallSliderWellOff@2x.png */,
 				5F8F327C12BE951C009B2446 /* SmallSliderWellOn.png */,
+				93F216ED15E5BB7500343EB1 /* SmallSliderWellOn@2x.png */,
 				5F9409230F3656C900317331 /* SliderWell.png */,
+				93F216E915E5BB7500343EB1 /* SliderWell@2x.png */,
 				5F9409240F3656C900317331 /* SliderHandleDown.png */,
+				93F216E815E5BB7500343EB1 /* SliderHandleDown@2x.png */,
 				5F9409250F3656C900317331 /* SliderHandle.png */,
+				93F216E715E5BB7500343EB1 /* SliderHandle@2x.png */,
 				5F9409290F3656C900317331 /* OverlayMask.png */,
+				93F216E615E5BB7500343EB1 /* OverlayMask@2x.png */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -210,6 +238,14 @@
 				5F8F327E12BE951C009B2446 /* SmallSliderHandleDown.png in Resources */,
 				5F8F327F12BE951C009B2446 /* SmallSliderWellOff.png in Resources */,
 				5F8F328012BE951C009B2446 /* SmallSliderWellOn.png in Resources */,
+				93F216EE15E5BB7500343EB1 /* OverlayMask@2x.png in Resources */,
+				93F216EF15E5BB7500343EB1 /* SliderHandle@2x.png in Resources */,
+				93F216F015E5BB7500343EB1 /* SliderHandleDown@2x.png in Resources */,
+				93F216F115E5BB7500343EB1 /* SliderWell@2x.png in Resources */,
+				93F216F215E5BB7500343EB1 /* SmallSliderHandle@2x.png in Resources */,
+				93F216F315E5BB7500343EB1 /* SmallSliderHandleDown@2x.png in Resources */,
+				93F216F415E5BB7500343EB1 /* SmallSliderWellOff@2x.png in Resources */,
+				93F216F515E5BB7500343EB1 /* SmallSliderWellOn@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,7 +259,7 @@
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				5F9409190F36563700317331 /* TMSliderControl.m in Sources */,
 				5F9409200F36566000317331 /* AppController.m in Sources */,
-				5F8F327712BE9303009B2446 /* TMSliderControlSmall.m in Sources */,
+				938A6C10154F48A0007FC919 /* TMSliderControlSmall.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,26 +319,28 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = "";
 			};
 			name = Debug;
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = "";
 			};
 			name = Release;
 		};
